@@ -17,8 +17,11 @@
     const spaceCtx = spaceCanvas.getContext('2d', { alpha: false });
     const astronautCanvas = document.getElementById('astronaut-canvas');
     const astronautCtx = astronautCanvas.getContext('2d', { alpha: true });
+    
+    // Botões Orbitais
     const btnEstudio = document.getElementById('btn-estudio');
     const btnVistoria = document.getElementById('btn-vistoria');
+    const btnFacebook = document.getElementById('btn-facebook');
     const orbitalSystem = document.getElementById('orbital-system');
 
     // State Interpolation (lerp)
@@ -29,10 +32,9 @@
         currentFrame: 0,
         
         // Scroll-Driven Orbital Side-Swapping Interpolation State
-        btn1X: 0,
-        btn1Y: 0,
-        btn2X: 0,
-        btn2Y: 0,
+        btn1X: 0, btn1Y: 0,
+        btn2X: 0, btn2Y: 0,
+        btn3X: 0, btn3Y: 0,
         btnOpacity: 0,
         
         lerpFactor: 0.08 // Fluid cinematic deceleration
@@ -203,7 +205,7 @@
         astronautCtx.drawImage(img, drawX, drawY, drawW, drawH);
     }
 
-    // 3. SCROLL-DRIVEN DYNAMIC ORBITAL SIDE-SWAPPING PIPELINE
+    // 3. SCROLL-DRIVEN DYNAMIC ORBITAL TRIPLE-BUTTON PIPELINE
     function updateOrbitalButtons(scrollProgress, time) {
         const w = window.innerWidth;
         const h = window.innerHeight;
@@ -218,10 +220,10 @@
         // Scroll depth drives orbital side swapping
         const orbitAngle = scrollProgress * Math.PI * 2.5;
 
-        // Button 1 (ESTÚDIO MARCOS) starts top-left quadrant (~210 deg = 3.66 rad)
+        // Distribuição triangular em 360 graus (120° de distância entre cada botão)
         const angle1 = orbitAngle + 3.66;
-        // Button 2 (VISTORIA DE IMÓVEIS) stays 180 degrees (PI) opposite
-        const angle2 = angle1 + Math.PI;
+        const angle2 = angle1 + (Math.PI * 2 / 3);
+        const angle3 = angle1 + (Math.PI * 4 / 3);
 
         // Zero-gravity sine wave floating motion
         const floatY1 = Math.sin(time * 0.0018) * 7;
@@ -230,9 +232,13 @@
         const floatY2 = Math.sin(time * 0.0016 + 1.5) * 7;
         const floatX2 = Math.cos(time * 0.0012 + 1.5) * 4;
 
+        const floatY3 = Math.sin(time * 0.0020 + 3.0) * 7;
+        const floatX3 = Math.cos(time * 0.0010 + 3.0) * 4;
+
         // Approximate button centers
         const btn1HalfW = isMobile ? 90 : 115;
         const btn2HalfW = isMobile ? 100 : 130;
+        const btn3HalfW = isMobile ? 105 : 135;
         const btnHalfH = 24;
 
         // Calculate target positions relative to viewport top-left
@@ -242,6 +248,9 @@
         const targetX2 = centerX + Math.cos(angle2) * radiusX + floatX2 - btn2HalfW;
         const targetY2 = centerY + Math.sin(angle2) * radiusY + floatY2 - btnHalfH;
 
+        const targetX3 = centerX + Math.cos(angle3) * radiusX + floatX3 - btn3HalfW;
+        const targetY3 = centerY + Math.sin(angle3) * radiusY + floatY3 - btnHalfH;
+
         // Linear interpolation (lerp) for 60FPS fluid cinematic motion
         state.btn1X = lerp(state.btn1X || targetX1, targetX1, state.lerpFactor);
         state.btn1Y = lerp(state.btn1Y || targetY1, targetY1, state.lerpFactor);
@@ -249,9 +258,13 @@
         state.btn2X = lerp(state.btn2X || targetX2, targetX2, state.lerpFactor);
         state.btn2Y = lerp(state.btn2Y || targetY2, targetY2, state.lerpFactor);
 
+        state.btn3X = lerp(state.btn3X || targetX3, targetX3, state.lerpFactor);
+        state.btn3Y = lerp(state.btn3Y || targetY3, targetY3, state.lerpFactor);
+
         // 3D Depth Scale effect as buttons orbit
         const scale1 = 0.94 + (Math.sin(angle1) + 1) * 0.06;
         const scale2 = 0.94 + (Math.sin(angle2) + 1) * 0.06;
+        const scale3 = 0.94 + (Math.sin(angle3) + 1) * 0.06;
 
         // Scroll entrance opacity
         const isActivated = window.scrollY > 25;
@@ -270,6 +283,13 @@
             btnVistoria.style.visibility = state.btnOpacity > 0.005 ? 'visible' : 'hidden';
             btnVistoria.style.opacity = (state.btnOpacity * (0.85 + scale2 * 0.15)).toFixed(3);
             btnVistoria.style.transform = `translate3d(${state.btn2X.toFixed(2)}px, ${state.btn2Y.toFixed(2)}px, 0) scale(${scale2.toFixed(3)})`;
+        }
+
+        // Render FACEBOOK INOVE VISTORIA
+        if (btnFacebook) {
+            btnFacebook.style.visibility = state.btnOpacity > 0.005 ? 'visible' : 'hidden';
+            btnFacebook.style.opacity = (state.btnOpacity * (0.85 + scale3 * 0.15)).toFixed(3);
+            btnFacebook.style.transform = `translate3d(${state.btn3X.toFixed(2)}px, ${state.btn3Y.toFixed(2)}px, 0) scale(${scale3.toFixed(3)})`;
         }
     }
 
