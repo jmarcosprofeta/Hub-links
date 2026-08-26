@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Immersive Creative Experience | Estúdio Marcos & Vistoria de Imóveis</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Canvas Layer -->
+    <div id="background-layer">
+        <canvas id="space-canvas"></canvas>
+        <canvas id="astronaut-canvas"></canvas>
+        <canvas id="fx-canvas"></canvas>
+    </div>
+
+    <!-- Cosmic Orbital Ring System -->
+    <div id="orbital-system" aria-hidden="true">
+        <div class="orbit-ring ring-inner">
+            <span class="orbit-node node-1"></span>
+        </div>
+        <div class="orbit-ring ring-middle">
+            <span class="orbit-node node-2"></span>
+        </div>
+        <div class="orbit-ring ring-outer">
+            <span class="orbit-node node-3"></span>
+        </div>
+    </div>
+
+    <!-- Scroll Progress Indicator -->
+    <div id="scroll-progress-track">
+        <div id="scroll-progress-fill"></div>
+    </div>
+    <div id="scroll-progress-label">
+        <span id="scroll-phase-text">INÍCIO</span>
+        <span id="scroll-percent">0%</span>
+    </div>
+
+    <!-- Foreground Layer: Native Scroll -->
+    <main id="foreground-layer">
+        <div class="scroll-spacer"></div>
+    </main>
+
+    <!-- Orbital Floating Glass Pill Buttons -->
+    <div id="orbital-buttons-container">
+        <a id="btn-estudio" href="https://www.estudiomarcos.space/home" target="_blank" rel="noopener noreferrer" class="orbital-pill-btn btn-estudio" aria-label="ESTÚDIO MARCOS">
+            <span class="btn-glow-dot dot-mint"></span>
+            <span class="btn-text">ESTÚDIO MARCOS</span>
+        </a>
+
+        <a id="btn-vistoria" href="https://www.inovevistoria.online/home" target="_blank" rel="noopener noreferrer" class="orbital-pill-btn btn-vistoria" aria-label="VISTORIA DE IMÓVEIS">
+            <span class="btn-glow-dot dot-gold"></span>
+            <span class="btn-text">VISTORIA DE IMÓVEIS</span>
+        </a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
