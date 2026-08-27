@@ -18,6 +18,11 @@
     const astronautCanvas = document.getElementById('astronaut-canvas');
     const astronautCtx = astronautCanvas.getContext('2d', { alpha: true });
     
+    // UI Elements
+    const scrollProgressFill = document.getElementById('scroll-progress-fill');
+    const scrollPhaseText = document.getElementById('scroll-phase-text');
+    const scrollPercentText = document.getElementById('scroll-percent');
+    
     // Botões Orbitais
     const btnEstudio = document.getElementById('btn-estudio');
     const btnVistoria = document.getElementById('btn-vistoria');
@@ -155,7 +160,7 @@
             const paddedIndex = String(i).padStart(3, '0');
             const filename = `ezgif-frame-${paddedIndex}.jpg`;
 
-            // Smart fallback: try relative path first, fallback to FRAMER/ folder if opened from parent dir
+            // Smart fallback: try relative path first, fallback to FRAMER/ folder
             img.src = filename;
             img.onerror = function () {
                 if (!this.dataset.retried) {
@@ -180,7 +185,7 @@
         const img = frames[safeIndex];
         if (!img || !img.complete || img.naturalWidth === 0) return;
 
-        // Object-fit: cover calculation using integer Math to prevent subpixel interpolation blur
+        // Object-fit cover calculation
         const imgRatio = img.naturalWidth / img.naturalHeight;
         const canvasRatio = w / h;
 
@@ -300,6 +305,26 @@
         state.targetFrame = state.targetScrollProgress * (TOTAL_FRAMES - 1);
     }
 
+    function updateUIElements(progress) {
+        const percentage = Math.round(progress * 100);
+        
+        if (scrollProgressFill) {
+            scrollProgressFill.style.height = `${percentage}%`;
+        }
+        if (scrollPercentText) {
+            scrollPercentText.textContent = `${percentage}%`;
+        }
+        if (scrollPhaseText) {
+            if (percentage < 30) {
+                scrollPhaseText.textContent = 'INÍCIO';
+            } else if (percentage < 70) {
+                scrollPhaseText.textContent = 'EXPLORAÇÃO';
+            } else {
+                scrollPhaseText.textContent = 'ÓRBITA Final';
+            }
+        }
+    }
+
     function animate(timestamp) {
         const time = timestamp || performance.now();
 
@@ -310,7 +335,7 @@
         state.currentScrollProgress = lerp(state.currentScrollProgress, state.targetScrollProgress, state.lerpFactor);
         state.currentFrame = lerp(state.currentFrame, state.targetFrame, state.lerpFactor);
 
-        // Hardware-Accelerated CSS Transformations using translate3d & rotate3d
+        // Hardware-Accelerated CSS Transformations
         const frameOffsetY = (state.currentScrollProgress - 0.5) * 50;
         const rotDeg = Math.sin(state.currentScrollProgress * Math.PI) * 3;
 
@@ -329,6 +354,9 @@
 
         // Dynamic 3D Orbital Button Side Swapping
         updateOrbitalButtons(state.currentScrollProgress, time);
+
+        // Dynamic UI HUD Indicator update
+        updateUIElements(state.currentScrollProgress);
 
         requestAnimationFrame(animate);
     }
