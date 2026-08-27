@@ -67,11 +67,36 @@
         </a>
     </div>
 
-    <!-- FOOTER TERMINAL CENTRALIZADO -->
-    <footer style="position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); z-index: 10; pointer-events: none; width: max-content;">
-        <p style="font-family: 'Courier New', Courier, monospace; font-size: 0.65rem; color: rgba(255, 255, 255, 0.35); text-transform: uppercase; letter-spacing: 1.5px; margin: 0; text-align: center;">
-            [SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]
-        </p>
+    <!-- FOOTER TERMINAL COM SELETOR DE IDIOMA -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="lang-selector-wrapper">
+                <select id="language-select" class="lang-select">
+                    <option value="da">Dansk</option>
+                    <option value="de">Deutsch</option>
+                    <option value="el">Ελληνικά</option>
+                    <option value="en">English</option>
+                    <option value="en-gb">English (UK)</option>
+                    <option value="es-es">Español (España)</option>
+                    <option value="es">Español</option>
+                    <option value="fa">فارسی</option>
+                    <option value="fi">Suomi</option>
+                    <option value="fr">Français</option>
+                    <option value="he">עברית</option>
+                    <option value="id">Bahasa Indonesia</option>
+                    <option value="it">Italiano</option>
+                    <option value="ja">日本語</option>
+                    <option value="ko">한국어</option>
+                    <option value="ms">Bahasa Melayu</option>
+                    <option value="no">Norsk</option>
+                    <option value="nl">Nederlands</option>
+                    <option value="pl">Polski</option>
+                    <option value="pt-br" selected>Português (Brasil)</option>
+                </select>
+                <span class="custom-arrow"></span>
+            </div>
+            <span class="copyright-text">[SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]</span>
+        </div>
     </footer>
 
     <script src="script.js"></script>
