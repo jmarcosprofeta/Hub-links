@@ -1,7 +1,7 @@
 /**
  * IMMERSIVE CREATIVE WEB EXPERIENCE
  * 60FPS High-Performance Visual Engine & Interactive Orbital Button Swapping
- * Smart Image Path Fallback Architecture
+ * Smart Image Path Fallback Architecture & Dynamic Multi-Language I18n Engine
  */
 
 (function () {
@@ -29,12 +29,16 @@
     const btnFacebook = document.getElementById('btn-facebook');
     const orbitalSystem = document.getElementById('orbital-system');
 
+    // Language Selector DOM
+    const langSelect = document.getElementById('language-select');
+
     // State Interpolation (lerp)
     const state = {
         targetScrollProgress: 0,
         currentScrollProgress: 0,
         targetFrame: 0,
         currentFrame: 0,
+        currentLang: 'pt-br',
         
         // Scroll-Driven Orbital Side-Swapping Interpolation State
         btn1X: 0, btn1Y: 0,
@@ -43,6 +47,80 @@
         btnOpacity: 0,
         
         lerpFactor: 0.08 // Fluid cinematic deceleration
+    };
+
+    // Dicionário de Idiomas
+    const translations = {
+        'pt-br': {
+            scroll_hint: '[ SYS_SCROLL // EXPLORAR ]',
+            btn_estudio: 'ESTÚDIO MARCOS',
+            btn_vistoria: 'VISTORIA DE IMÓVEIS',
+            btn_facebook: 'PÁGINA INOVE VISTORIA',
+            phase_start: 'INÍCIO',
+            phase_explore: 'EXPLORAÇÃO',
+            phase_orbit: 'ÓRBITA FINAL',
+            copyright: '[SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]'
+        },
+        'en': {
+            scroll_hint: '[ SYS_SCROLL // EXPLORE ]',
+            btn_estudio: 'ESTÚDIO MARCOS',
+            btn_vistoria: 'PROPERTY INSPECTION',
+            btn_facebook: 'INOVE VISTORIA PAGE',
+            phase_start: 'START',
+            phase_explore: 'EXPLORATION',
+            phase_orbit: 'FINAL ORBIT',
+            copyright: '[SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]'
+        },
+        'es': {
+            scroll_hint: '[ SYS_SCROLL // EXPLORAR ]',
+            btn_estudio: 'ESTÚDIO MARCOS',
+            btn_vistoria: 'INSPECCIÓN DE INMUEBLES',
+            btn_facebook: 'PÁGINA INOVE VISTORIA',
+            phase_start: 'INICIO',
+            phase_explore: 'EXPLORACIÓN',
+            phase_orbit: 'ÓRBITA FINAL',
+            copyright: '[SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]'
+        },
+        'fr': {
+            scroll_hint: '[ SYS_SCROLL // EXPLORER ]',
+            btn_estudio: 'ESTÚDIO MARCOS',
+            btn_vistoria: 'INSPECTION IMMOBILIÈRE',
+            btn_facebook: 'PAGE INOVE VISTORIA',
+            phase_start: 'DÉBUT',
+            phase_explore: 'EXPLORATION',
+            phase_orbit: 'ORBITE FINALE',
+            copyright: '[SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]'
+        },
+        'de': {
+            scroll_hint: '[ SYS_SCROLL // ERKUNDEN ]',
+            btn_estudio: 'ESTÚDIO MARCOS',
+            btn_vistoria: 'IMMOBILIENINSPEKTION',
+            btn_facebook: 'INOVE VISTORIA SEITE',
+            phase_start: 'START',
+            phase_explore: 'ERKUNDUNG',
+            phase_orbit: 'FINALE ORBIT',
+            copyright: '[SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]'
+        },
+        'it': {
+            scroll_hint: '[ SYS_SCROLL // ESPLORA ]',
+            btn_estudio: 'ESTÚDIO MARCOS',
+            btn_vistoria: 'ISPEZIONE IMMOBILIARE',
+            btn_facebook: 'PAGINA INOVE VISTORIA',
+            phase_start: 'INIZIO',
+            phase_explore: 'ESPLORAZIONE',
+            phase_orbit: 'ORBITA FINALE',
+            copyright: '[SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]'
+        },
+        'ja': {
+            scroll_hint: '[ SYS_SCROLL // 探索 ]',
+            btn_estudio: 'ESTÚDIO MARCOS',
+            btn_vistoria: '不動産点検',
+            btn_facebook: 'INOVE VISTORIA ページ',
+            phase_start: 'スタート',
+            phase_explore: '探索',
+            phase_orbit: '最終軌道',
+            copyright: '[SYS_COPYRIGHT // 2026 ESTÚDIO MARCOS]'
+        }
     };
 
     function lerp(start, end, factor) {
@@ -307,6 +385,7 @@
 
     function updateUIElements(progress) {
         const percentage = Math.round(progress * 100);
+        const langData = translations[state.currentLang] || translations['en'] || translations['pt-br'];
         
         if (scrollProgressFill) {
             scrollProgressFill.style.height = `${percentage}%`;
@@ -316,12 +395,34 @@
         }
         if (scrollPhaseText) {
             if (percentage < 30) {
-                scrollPhaseText.textContent = 'INÍCIO';
+                scrollPhaseText.textContent = langData.phase_start;
             } else if (percentage < 70) {
-                scrollPhaseText.textContent = 'EXPLORAÇÃO';
+                scrollPhaseText.textContent = langData.phase_explore;
             } else {
-                scrollPhaseText.textContent = 'ÓRBITA Final';
+                scrollPhaseText.textContent = langData.phase_orbit;
             }
+        }
+    }
+
+    // 5. TRADUÇÃO DE INTERFACE (I18N SYSTEM)
+    function applyLanguage(langCode) {
+        const langData = translations[langCode] || translations['en'] || translations['pt-br'];
+        state.currentLang = langCode;
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (langData[key]) {
+                el.textContent = langData[key];
+            }
+        });
+    }
+
+    function initLanguageSelector() {
+        if (langSelect) {
+            langSelect.addEventListener('change', (e) => {
+                const selected = e.target.value;
+                applyLanguage(selected);
+            });
         }
     }
 
@@ -370,6 +471,7 @@
     window.addEventListener('DOMContentLoaded', () => {
         initSpaceCanvas();
         loadFrames();
+        initLanguageSelector();
         requestAnimationFrame(animate);
     });
 
