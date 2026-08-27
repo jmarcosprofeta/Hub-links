@@ -100,7 +100,7 @@ html, body {
 
 /* ESCRITA HUD CIBERNÉTICO CENTRALIZADA (SUMINDO AO ROLAR VIA CSS / SCROLL TIMELINE) */
 #orbital-system::before {
-    content: "[ SYS_SCROLL ROLE // PARA EXPLORAR 🛈 ]";
+    content: "[ ROLE PARA EXPLORAR 🛈 ]";
     position: absolute;
     top: 50%;
     left: 50%;
